@@ -1,0 +1,122 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: url('9019796.jpg') no-repeat center center/cover;
+    color: white;
+    text-align: center;
+}
+header {
+    background: rgba(255, 255, 255, 0.1); 
+    padding: 20px 0;
+    text-align: center;
+}
+
+.container {
+    width: 85%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1 {
+    font-size: 32px;
+    text-transform: uppercase;
+}
+
+.highlight {
+    color: red;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 120px 0; 
+    width: 85%;
+    margin: auto;
+}
+.text-box {
+    width: 50%;
+    text-align: left;
+    margin-top: 50px; 
+}
+
+.text-box h2 {
+    font-size: 50px; 
+    font-weight: bold;
+}
+
+.text-box p {
+    margin-top: 10px;
+    font-size: 20px; 
+}
+
+.btn {
+    display: inline-block;
+    background: red;
+    color: white;
+    padding: 12px 25px;
+    margin-top: 15px;
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: 5px;
+}
+
+
+.login-box {
+    width: 350px; 
+    height: 250px; 
+    background: rgba(255, 255, 255, 0.2); 
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    backdrop-filter: blur(10px); 
+    margin-top: 70px; 
+}
+
+.login-box h3 {
+    font-size: 24px; 
+    color: rgb(230, 219, 219);
+    margin-bottom: 15px;
+}
+
+.login-box input {
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+}
+
+.login-box button {
+    width: 90%;
+    padding: 12px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+}

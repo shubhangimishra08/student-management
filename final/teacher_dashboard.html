@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Management System - Dashboard</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --gray: #95a5a6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--secondary);
+            color: white;
+            padding: 20px 0;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-header h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-header p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .menu-item i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .menu-item span {
+            font-size: 0.9rem;
+        }
+        
+        .menu-category {
+            padding: 10px 20px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 10px;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border-radius: 4px;
+            padding: 8px 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            width: 300px;
+        }
+        
+        .search-bar input {
+            border: none;
+            outline: none;
+            flex: 1;
+            padding: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .search-bar i {
+            color: var(--gray);
+            margin-right: 10px;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 15px;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .stat-info h4 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .stat-info p {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        
+        .blue-icon {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: var(--primary);
+        }
+        
+        .green-icon {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success);
+        }
+        
+        .orange-icon {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+        }
+        
+        .red-icon {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+        
+        .main-cards {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .card-header h3 {
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+        
+        .card-action {
+            font-size: 0.85rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        table th {
+            color: var(--gray);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        table td {
+            font-size: 0.9rem;
+        }
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .status-pending {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+        }
+        
+        .status-approved {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success);
+        }
+        
+        .status-rejected {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+        
+        .status-verifying {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: var(--primary);
+        }
+        
+        .status-waiting {
+            background-color: rgba(149, 165, 166, 0.1);
+            color: var(--gray);
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            border-radius: 4px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-right: 5px;
+        }
+        
+        .action-btn.view {
+            background-color: var(--secondary);
+        }
+        
+        .quick-action {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quick-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .quick-action.bonafide {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+        
+        .quick-action.completion {
+            background-color: rgba(46, 204, 113, 0.1);
+        }
+        
+        .quick-action.verification {
+            background-color: rgba(243, 156, 18, 0.1);
+        }
+        
+        .quick-action-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .bonafide .quick-action-icon {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .completion .quick-action-icon {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .verification .quick-action-icon {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .quick-action-info h4 {
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+        
+        .quick-action-info p {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .notification {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .notification-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .notification-info h4 {
+            font-size: 0.9rem;
+            margin-bottom: 3px;
+        }
+        
+        .notification-info p {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .notification-time {
+            font-size: 0.75rem;
+            color: var(--gray);
+            margin-top: 3px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding-bottom: 10px;
+            }
+            
+            .main-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-bar {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+        
+        /* Font Awesome Icons (simulated with text) */
+        .fa {
+            font-style: normal;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>Certificate System</h3>
+                <p>Admin Dashboard</p>
+            </div>
+            
+            <div class="sidebar-menu">
+                <div class="menu-item active">
+                    <i class="fa">📊</i>
+                    <span>Dashboard</span>
+                </div>
+                
+                <div class="menu-category">Certificate Management</div>
+                
+                <div class="menu-item">
+                    <i class="fa">📄</i>
+                    <span>Bonafide Certificates</span>
+                </div>
+                
+                <div class="menu-item">
+                    <i class="fa">🎓</i>
+                    <span>Course Completion</span>
+                </div>
+                
+                <div class="menu-item">
+                    <i class="fa">🔍</i>
+                    <span>Verification Requests</span>
+                </div>
+                
+                <div class="menu-category">Administration</div>
+                
+                <div class="menu-item">
+                    <i class="fa">👥</i>
+                    <span>Student Records</span>
+                </div>
+                
+                <div class="menu-item">
+                    <i class="fa">💰</i>
+                    <span>Fee Payments</span>
+                </div>
+                
+                <div class="menu-item">
+                    <i class="fa">📝</i>
+                    <span>Templates</span>
+                </div>
+                
+                <div class="menu-item">
+                    <i class="fa">⚙</i>
+                    <span>Settings</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <div class="search-bar">
+                    <i class="fa">🔍</i>
+                    <input type="text" placeholder="Search for students, applications...">
+                </div>
+                
+                <div class="user-profile">
+                    <i class="fa">🔔</i>
+                    <img src="/api/placeholder/80/80" alt="Admin Profile">
+                </div>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="stats-container">
+              <div class="stat-card">
+                  <div class="stat-icon blue-icon">📄</div>
+                
+                  
+                    <div class="stat-info">
+                        <h4 id="pendingCount">47</h4>
+                        <p>Pending Applications</p>
+                    </div>
+                
+                <script>
+                    // Simulated fetch function (replace 'formData.json' with the actual path)
+                    fetch('formData.json')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data && Array.isArray(data)) { // Assuming it's an array of applications
+                                let pendingCountElement = document.getElementById("pendingCount");
+                                let currentCount = parseInt(pendingCountElement.textContent);
+                                pendingCountElement.textContent = currentCount + data.length;
+                            }
+                        })
+                        .catch(error => console.error("Error loading formData.json:", error));
+                </script>
+                
+
+
+
+
+
+              </div>
+              
+              <div class="stat-card">
+                  <div class="stat-icon green-icon">✓</div>
+                  <div class="stat-info">
+                      <h4>215</h4>
+                      <p>Certificates Issued</p>
+                  </div>
+              </div>
+              
+              <div class="stat-card">
+                  <div class="stat-icon orange-icon">⏱</div>
+                  <div class="stat-info">
+                      <h4>18</h4>
+                      <p>Awaiting Verification</p>
+                  </div>
+              </div>
+              
+              <div class="stat-card">
+                  <div class="stat-icon red-icon">⚠</div>
+                  <div class="stat-info">
+                      <h4>8</h4>
+                      <p>Rejected Applications</p>
+                  </div>
+              </div>
+            </div>
+
+            <!-- Main Cards Container -->
+            <div class="main-cards">
+                <!-- Recent Applications Table -->
+                <div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Recent Certificate Applications</h3>
+                            <div class="card-action">View All</div>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Certificate Type</th>
+                                    <th>Applied On</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ST20240228</td>
+                                    <td>Priya Sharma</td>
+                                    <td>Bonafide Certificate</td>
+                                    <td>28 Feb, 2025</td>
+                                    <td><span class="status status-pending">Pending</span></td>
+                                    <td>
+                                        <button class="action-btn">Process</button>
+                                        <button class="action-btn view">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ST20240227</td>
+                                    <td>Rahul Singh</td>
+                                    <td>Course Completion</td>
+                                    <td>27 Feb, 2025</td>
+                                    <td><span class="status status-verifying">Verifying</span></td>
+                                    <td>
+                                        <button class="action-btn">Process</button>
+                                        <button class="action-btn view">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ST20240225</td>
+                                    <td>Ankit Kumar</td>
+                                    <td>Bonafide Certificate</td>
+                                    <td>25 Feb, 2025</td>
+                                    <td><span class="status status-waiting">Fee Pending</span></td>
+                                    <td>
+                                        <button class="action-btn">Remind</button>
+                                        <button class="action-btn view">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ST20240224</td>
+                                    <td>Meera Patel</td>
+                                    <td>Course Completion</td>
+                                    <td>24 Feb, 2025</td>
+                                    <td><span class="status status-approved">Approved</span></td>
+                                    <td>
+                                        <button class="action-btn">Download</button>
+                                        <button class="action-btn view">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ST20240220</td>
+                                    <td>Arjun Reddy</td>
+                                    <td>Bonafide Certificate</td>
+                                    <td>20 Feb, 2025</td>
+                                    <td><span class="status status-rejected">Rejected</span></td>
+                                    <td>
+                                        <button class="action-btn">Details</button>
+                                        <button class="action-btn view">View</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Certificate Verification Queue</h3>
+                            <div class="card-action">View All</div>
+                        </div>
+                        
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Verifier</th>
+                                    <th>Certificate ID</th>
+                                    <th>Approval Level</th>
+                                    <th>Waiting Since</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Dr. Sunita Verma</td>
+                                    <td>CERT-28923</td>
+                                    <td>HOD Approval</td>
+                                    <td>1 day</td>
+                                    <td>
+                                        <button class="action-btn">Remind</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Prof. Amit Joshi</td>
+                                    <td>CERT-28920</td>
+                                    <td>Course Coordinator</td>
+                                    <td>2 days</td>
+                                    <td>
+                                        <button class="action-btn">Remind</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Finance Dept.</td>
+                                    <td>CERT-28918</td>
+                                    <td>Fee Verification</td>
+                                    <td>3 days</td>
+                                    <td>
+                                        <button class="action-btn">Escalate</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Right Sidebar -->
+                <div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Quick Actions</h3>
+                        </div>
+                        
+                        <div class="quick-action bonafide">
+                            <div class="quick-action-icon">📄</div>
+                            <div class="quick-action-info">
+                                <h4>New Bonafide Certificate</h4>
+                                <p>Create a new request manually</p>
+                            </div>
+                        </div>
+                        
+                        <div class="quick-action completion">
+                            <div class="quick-action-icon">🎓</div>
+                            <div class="quick-action-info">
+                                <h4>Course Completion Certificate</h4>
+                                <p>Generate for completed courses</p>
+                            </div>
+                        </div>
+                        
+                        <div class="quick-action verification">
+                            <div class="quick-action-icon">🔍</div>
+                            <div class="quick-action-info">
+                                <h4>Verify Certificate</h4>
+                                <p>Validate authenticity of certificates</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Recent Notifications</h3>
+                            <div class="card-action">Clear All</div>
+                        </div>
+                        
+                        <div class="notification">
+                            <div class="notification-icon blue-icon">📫</div>
+                            <div class="notification-info">
+                                <h4>New Certificate Request</h4>
+                                <p>Priya Sharma has requested a Bonafide Certificate</p>
+                                <div class="notification-time">Just now</div>
+                            </div>
+                        </div>
+                        
+                        <div class="notification">
+                            <div class="notification-icon green-icon">✓</div>
+                            <div class="notification-info">
+                                <h4>Certificate Approved</h4>
+                                <p>Dr. Sunita Verma approved CERT-28919</p>
+                                <div class="notification-time">2 hours ago</div>
+                            </div>
+                        </div>
+                        
+                        <div class="notification">
+                            <div class="notification-icon orange-icon">⏱</div>
+                            <div class="notification-info">
+                                <h4>Reminder Sent</h4>
+                                <p>Fee verification reminder sent to Finance Dept.</p>
+                                <div class="notification-time">5 hours ago</div>
+                            </div>
+                        </div>
+                        
+                        <div class="notification">
+                            <div class="notification-icon red-icon">⚠</div>
+                            <div class="notification-info">
+                                <h4>Application Rejected</h4>
+                                <p>Arjun Reddy's application rejected due to incomplete documents</p>
+                                <div class="notification-time">1 day ago</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Certificate Statistics</h3>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 10px 0;">
+                            <!-- Simple chart representation -->
+                            <div style="height: 150px; display: flex; align-items: flex-end; justify-content: space-around; margin-top: 10px;">
+                                <div style="width: 30px; background-color: #3498db; height: 70%; margin: 0 5px;"></div>
+                                <div style="width: 30px; background-color: #3498db; height: 90%; margin: 0 5px;"></div>
+                                <div style="width: 30px; background-color: #3498db; height: 60%; margin: 0 5px;"></div>
+                                <div style="width: 30px; background-color: #3498db; height: 80%; margin: 0 5px;"></div>
+                                <div style="width: 30px; background-color: #3498db; height: 65%; margin: 0 5px;"></div>
+                            </div>
+                            <div style="font-size: 0.8rem; color: #95a5a6; margin-top: 10px;">Last 5 days certificate issuance</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    fetch("/api/attendance")
+    .then(response => response.json())
+    .then(data => {
+        let table = document.getElementById("attendanceTable");
+        table.innerHTML = "";
+        data.forEach(student => {
+            let row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${student.id}</td>
+                <td>${student.name}</td>
+                <td>${student.date}</td>
+                <td>${student.status}</td>
+            `;
+            table.appendChild(row);
+        });
+    })
+    .catch(error => console.error("Error fetching data:", error));
+</script>
+</html>

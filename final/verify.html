@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check Roll Number</title>
+    <script>
+        function checkRoll() {
+            let rollNumber = document.getElementById("roll_number").value;
+            fetch("/check", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: "roll_number=" + encodeURIComponent(rollNumber)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").innerText = data.status;
+            });
+        }
+    </script>
+</head>
+<body>
+    <h2>Enter Your Roll Number</h2>
+    <input type="text" id="roll_number">
+    <button onclick="checkRoll()">Check</button>
+    <p id="result"></p>
+</body>
+</html>

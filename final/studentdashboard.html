@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Certificate Portal - Dashboard</title>
+    <style>
+        :root {
+            --primary: #3a5a97;
+            --secondary: #5b7bbd;
+            --light: #f5f7fa;
+            --dark: #2c3e50;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary);
+            color: white;
+            padding: 20px 0;
+            transition: all 0.3s;
+        }
+        
+        .logo {
+            text-align: center;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .student-info {
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .student-info h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .student-info p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .nav-menu {
+            list-style-type: none;
+        }
+        
+        .nav-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background-color: var(--secondary);
+        }
+        
+        .nav-item i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .page-title h1 {
+            font-size: 24px;
+            color: var(--dark);
+        }
+        
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .notification-bell i {
+            font-size: 22px;
+            color: var(--dark);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            color: var(--dark);
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .icon-blue {
+            background-color: var(--primary);
+        }
+        
+        .icon-green {
+            background-color: var(--success);
+        }
+        
+        .icon-orange {
+            background-color: var(--warning);
+        }
+        
+        .card-content {
+            text-align: center;
+        }
+        
+        .card-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .card-description {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .application-table-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            color: var(--dark);
+        }
+        
+        .new-application-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+        
+        .new-application-btn:hover {
+            background-color: var(--secondary);
+        }
+        
+        .new-application-btn i {
+            margin-right: 8px;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th, .table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .table th {
+            background-color: #f8f9fa;
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .table tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-processing {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        
+        .status-completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            margin-right: 5px;
+            font-size: 16px;
+        }
+        
+        .action-btn:hover {
+            color: var(--secondary);
+        }
+        
+        .alerts-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .alert-warning {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            color: #856404;
+        }
+        
+        .alert-info {
+            background-color: #cce5ff;
+            border-left: 4px solid #0d6efd;
+            color: #004085;
+        }
+        
+        .alert i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: modalFadeIn 0.3s;
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            color: var(--dark);
+        }
+        
+        .close-modal {
+            font-size: 24px;
+            color: #aaa;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .close-modal:hover {
+            color: var(--dark);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(58, 90, 151, 0.25);
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 16px;
+        }
+        
+        .form-file {
+            position: relative;
+        }
+        
+        .form-file-input {
+            position: absolute;
+            width: 0;
+            height: 0;
+            opacity: 0;
+        }
+        
+        .form-file-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 10px;
+            border: 1px dashed #ced4da;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #f8f9fa;
+            transition: all 0.3s;
+        }
+        
+        .form-file-label:hover {
+            background-color: #e9ecef;
+        }
+        
+        .form-file-label i {
+            margin-right: 8px;
+            color: var(--primary);
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+        
+        .btn-light {
+            background-color: #e9ecef;
+            color: var(--dark);
+            margin-right: 10px;
+        }
+        
+        .btn-light:hover {
+            background-color: #dde2e6;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 10px 0;
+            }
+            
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .table-responsive {
+                overflow-x: auto;
+            }
+            
+            .table th, .table td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="/api/placeholder/100/100" alt="University Logo">
+            </div>
+            <div class="student-info">
+                <h3>sangbed pati</h3>
+                <p>18700123113</p>
+                <p>B.Tech Computer Science</p>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </li>
+
+ 
+
+
+                <li class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i> <a href="login2.html" style="color: white;">LOGOUT</a>
+                </li>
+
+                <li class="nav-item">
+                    <i class="fas fa-sign-out-alt"></i> <a href="verify.html" style="color: white;">VERIFY</a>
+                </li>
+
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <div class="page-title">
+                    <h1>Student Dashboard</h1>
+                </div>
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+            </div>
+            
+            <!-- Dashboard Cards -->
+            <div class="dashboard-cards">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Active Requests</h3>
+                        <div class="card-icon icon-blue">
+                            <i class="fas fa-spinner"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-number">2</div>
+                        <div class="card-description">Pending Certificates</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Approved</h3>
+                        <div class="card-icon icon-green">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-number">5</div>
+                        <div class="card-description">Completed Certificates</div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Fee Status</h3>
+                        <div class="card-icon icon-orange">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-number">Clear</div>
+                        <div class="card-description">No Pending Dues</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Applications Table -->
+            <div class="application-table-container">
+                <div class="section-header">
+                    <h3 class="section-title">Recent Certificate Applications</h3>
+                    <button class="new-application-btn" id="newApplicationBtn">
+                        <i class="fas fa-plus"></i> New Application
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                               
+                                <th>Certificate Type</th>
+                                <th>Date Applied</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                
+                                <td>Bonafide Certificate</td>
+                                <td>Feb 20, 2025</td>
+                                <td><span class="status-badge status-processing">Processing</span></td>
+                                <td>
+                                    <button class="action-btn track-btn" title="Track Application"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn" title="Download"><i class="fas fa-download"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                
+                                <td>Course Completion</td>
+                                <td>Feb 15, 2025</td>
+                                <td><span class="status-badge status-pending">Document Verification</span></td>
+                                <td>
+                                    <button class="action-btn track-btn" title="Track Application"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn" title="Download"><i class="fas fa-download"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                
+                                <td>Result</td>
+                                <td>Jan 28, 2025</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td>
+                                    <button class="action-btn track-btn" title="Track Application"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn" title="Download"><i class="fas fa-download"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                
+                                <td>MAR</td>
+                                <td>Jan 15, 2025</td>
+                                <td><span class="status-badge status-rejected">Rejected</span></td>
+                                <td>
+                                    <button class="action-btn track-btn" title="Track Application"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn" title="View Reason"><i class="fas fa-info-circle"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                               
+                                <td>MOOCS</td>
+                                <td>Dec 10, 2024</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                                <td>
+                                    <button class="action-btn track-btn" title="Track Application"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn" title="Download"><i class="fas fa-download"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Alerts Section -->
+            <div class="alerts-container">
+                <div class="section-header">
+                    <h3 class="section-title">Alerts & Notifications</h3>
+                </div>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>Document Pending:</strong> Please upload your ID card for Bonafide Certificate application (BF2024-0057).
+                    </div>
+                </div>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <strong>System Update:</strong> Certificate verification service will be unavailable on March 1, 2025, from 10:00 AM to 2:00 PM due to scheduled maintenance.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- New Application Modal -->
+    <div class="modal" id="applicationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">New Certificate Request</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <form id="certificateForm">
+                <div class="form-group">
+                    <label class="form-label">Certificate Type</label>
+                    <select class="form-select" required>
+                        <option value="" selected disabled>Select Certificate Type</option>
+                        <option value="bonafide">Bonafide Certificate</option>
+                        <option value="course_completion">Course Completion Certificate</option>
+                        <option value="transcript">Transcript</option>
+                        <option value="character">Character Certificate</option>
+                        <option value="migration">Migration Certificate</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Purpose</label>
+                    <select class="form-select" required>
+                        <option value="" selected disabled>Select Purpose</option>
+                        <option value="visa">Visa Application</option>
+                        <option value="scholarship">Scholarship Application</option>
+                        <option value="internship">Internship</option>
+                        <option value="job">Job Application</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Number of Copies</label>
+                    <input type="number" class="form-control" min="1" max="5" value="1" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Required Documents</label>
+                    <div class="form-file">
+                        <input type="file" class="form-file-input" id="documentUpload" multiple>
+                        <label for="documentUpload" class="form-file-label">
+                            <i class="fas fa-upload"></i> Click to upload documents
+                        </label>
+                    </div>
+                    <small style="color: #6c757d; display: block; margin-top: 5px;">
+                        Upload ID card, fee receipt, or other required documents (Max 5MB each)
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Additional Comments</label>
+                    <textarea class="form-control" rows="3" placeholder="Any specific requirements or notes"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+    // Modal functionality
+        const modal = document.getElementById('applicationModal');
+        const newApplicationBtn = document.getElementById('newApplicationBtn');
+        const closeModal = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const certificateForm = document.getElementById('certificateForm');
+        const fileInput = document.getElementById('documentUpload');
+
+        newApplicationBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside of it
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Form submission
+        certificateForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Get form data
+            const certificateType = document.querySelector('.form-select').value;
+            const purpose = document.querySelectorAll('.form-select')[1].value;
+            const copies = document.querySelector('.form-control').value;
+            const comments = document.querySelector('textarea').value;
+            const uploadedFiles = Array.from(fileInput.files).map(file => file.name); // Store file names
+            
+            // Store form data in localStorage
+            const formData = {
+                certificateType,
+                purpose,
+                copies,
+                comments,
+                uploadedFiles,
+                timestamp: new Date().toISOString()
+            };
+            
+
+
+// Function to Save Data as JSON File
+        function saveFormData(data, filename = "formData.json") {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Call function to save form data
+        saveFormData(formData);
+            let applications = JSON.parse(localStorage.getItem('certificateRequests')) || [];
+            applications.push(formData);
+            localStorage.setItem('certificateRequests', JSON.stringify(applications));
+            
+            // Show success message
+            alert('Certificate request submitted successfully!');
+            modal.style.display = 'none';
+            
+            // Reset form
+            certificateForm.reset();
+            
+            // Refresh displayed data
+            displayStoredRequests();
+        });
+
+        // Function to display stored data in a table
+        function displayStoredRequests() {
+            let storedApplications = JSON.parse(localStorage.getItem('certificateRequests')) || [];
+            
+            const tableBody = document.getElementById('applicationsTableBody');
+            tableBody.innerHTML = ''; // Clear existing data
+            
+            storedApplications.forEach((app, index) => {
+                const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${app.certificateType || 'N/A'}</td>
+                        <td>${app.purpose || 'N/A'}</td>
+                        <td>${app.copies || 'N/A'}</td>
+                        <td>${app.comments || 'None'}</td>
+                        <td>${app.uploadedFiles.join(', ') || 'No Files'}</td>
+                        <td>${new Date(app.timestamp).toLocaleString()}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        // Load stored requests on page load
+        window.onload = displayStoredRequests;    
+
+
+        // Track buttons functionality
+        const trackButtons = document.querySelectorAll('.track-btn');
+        trackButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const refId = button.closest('tr').cells[0].textContent;
+                alert(`Tracking application: ${refId}\n\nCurrent Status: Verification in progress\nNext Step: Faculty approval\nEstimated completion: 2 days`);
+            });
+        });
+
+        document.getElementById("certificateForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Collect form data
+        const formData = {
+            certificateType: document.querySelector(".form-select").value,
+            purpose: document.querySelectorAll(".form-select")[1].value,
+            numberOfCopies: document.querySelector(".form-control").value,
+            documents: document.getElementById("documentUpload").files,
+            comments: document.querySelector("textarea").value
+        };
+        
+
+        // Log the data in the console
+        console.log("Form Data:", formData);
+
+        // Log uploaded files separately
+        if (formData.documents.length > 0) {
+            console.log("Uploaded Documents:");
+            for (let i = 0; i < formData.documents.length; i++) {
+                console.log(`File ${i + 1}:`, formData.documents[i].name);
+            }
+        }
+    });
+
+
+    </script>
+</body>
+</html>
